@@ -29,6 +29,6 @@ class PaymentController extends Controller
         $order->update(['status' => 'closed', 'total_amount' => $request->total_amount]);
         $order->table->update(['status' => 'available']);
 
-        return redirect()->route('waiter.index')->with('success', 'Rachunek zamknięty!');
+        return redirect()->route('waiter.index')->with('success', 'Bill closed.');
     }
 }

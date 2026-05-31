@@ -10,19 +10,50 @@ use Illuminate\Http\Request;
 
 class WaiterController extends Controller
 {
+    // public function index()
+    // {
+    //     $tables = Table::with(['orders' => function ($query) {
+    //         $query->where('status', 'open')->with('orderItems');
+    //     }])
+    //     ->orderBy('status', 'desc')
+    //     ->orderBy('number', 'asc')
+    //     ->get();
+
+    //     return view('waiter.index', compact('tables'));
+    // }
     public function index()
     {
-        $tables = Table::orderBy('number')->get();
+        $tables = Table::with(['orders' => function ($query) {
+            $query->where('status', 'open')->with('orderItems');
+        }])
+        ->orderBy('status', 'desc')
+        ->orderBy('number', 'asc')
+        ->get()
+        ->map(function ($table) {
+            if ($table->status !== 'available') {
+                $activeOrder = $table->orders->first();
+                
+                $table->totalItems = $activeOrder ? $activeOrder->orderItems->sum('quantity') : 0;
+                $table->readyItems = $activeOrder ? $activeOrder->orderItems->where('status', 'ready')->sum('quantity') : 0;
+                
+                $allReady = ($table->totalItems > 0 && $table->readyItems === $table->totalItems);
+                
+                $table->bgColor = $allReady ? 'bg-orange-500 hover:bg-orange-600' : 'bg-red-500 hover:bg-red-600';
+            }
+            
+            return $table;
+        });
+
         return view('waiter.index', compact('tables'));
     }
 
     public function createOrder(Table $table)
     {
-        // $menuItems = MenuItem::with('category')->get();
         $menuItems = MenuItem::with('category')
             ->where('is_active', true)
             ->whereHas('category', function($q) {
-                $q->where('is_active', true);
+                $q->where('is_active', true)
+                  ->where('name', '!=', 'Not signed');
             })
             ->get();
         return view('waiter.create_order', compact('table', 'menuItems'));
@@ -31,14 +62,14 @@ class WaiterController extends Controller
     public function editOrder(Table $table)
     {
         $order = $table->orders()->where('status', 'open')->firstOrFail();
-        // $menuItems = MenuItem::with('category')->get();
         $menuItems = MenuItem::with('category')
             ->where('is_active', true)
             ->whereHas('category', function($q) {
-                $q->where('is_active', true);
+                $q->where('is_active', true)
+                  ->where('name', '!=', 'Not signed');
             })
             ->get();
-        
+
         return view('waiter.edit_order', compact('table', 'order', 'menuItems'));
     }
 

@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Manage Tables</title>
-</head>
-<body class="bg-gray-100 p-6">
-    @include('partials.topbar')
+@extends('layouts.app')
+@section('content')
 
     <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
         <div class="flex justify-between items-center mb-6">
@@ -43,5 +36,4 @@
             @endforelse
         </div>
     </div>
-</body>
-</html>
+@endsection

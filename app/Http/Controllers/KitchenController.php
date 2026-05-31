@@ -58,4 +58,14 @@ class KitchenController extends Controller
 
         return back();
     }
+
+    public function markAllReady(Order $order)
+    {
+        $order->orderItems()
+              ->whereIn('status', ['pending', 'cooking'])
+              ->update(['status' => 'ready']);
+
+        return back()->with('success', 'All meals are ready.');
+    }
+
 }

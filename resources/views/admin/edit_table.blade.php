@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Admin - Edit Table</title>
-</head>
-<body class="bg-gray-100 p-6">
-    @include('partials.topbar')
-
+@extends('layouts.app')
+@section('content')
     <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
         
         <div class="flex justify-between items-center mb-6">
@@ -40,9 +32,8 @@
             </div>
 
             <div class="pt-4 border-t">
-                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded font-bold">Update Table</button>
+                 <x-btn>Update Table</x-btn>
             </div>
         </form>
     </div>
-</body>
-</html>
+@endsection

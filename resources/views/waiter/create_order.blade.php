@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>New Order</title>
-</head>
-<body class="bg-gray-100 p-8">
-    @include('partials.topbar')
+@extends('layouts.app')
+@section('content')
 
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md">
         <h1 class="text-2xl font-bold mb-6 text-gray-800">New Order: Table {{ $table->number }}</h1>
@@ -52,5 +45,4 @@
             </div>
         </form>
     </div>
-</body>
-</html>
+@endsection

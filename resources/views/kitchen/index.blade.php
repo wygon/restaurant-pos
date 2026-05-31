@@ -1,20 +1,27 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Kitchen view</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-8">
-    @include('partials.topbar')
-
+@extends('layouts.app')
+@section('content')
     <div class="max-w-6xl mx-auto">
         <h1 class="text-3xl font-bold mb-8">Kitchen View</h1>
+
+        @if(session('success'))
+            <div class="bg-green-100 text-green-700 p-4 mb-6 rounded font-semibold">
+                {{ session('success') }}
+            </div>
+        @endif
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($orders as $order)
                 <div class="bg-white p-6 rounded-lg shadow-md border-t-8 border-blue-500">
-                    <h2 class="text-xl font-bold mb-4 border-b pb-2">Table: {{ $order->table->number }}</h2>
+                    
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h2 class="text-xl font-bold">Table: {{ $order->table->number }}</h2>
+                        
+                        <form action="{{ route('kitchen.markAllReady', $order) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <x-btn-outline color="green">Mark All Ready</x-btn-outline>
+                        </form>
+                    </div>
                     
                     <div class="space-y-4">
                         @foreach ($order->orderItems->whereIn('status', ['pending', 'cooking']) as $item)
@@ -31,19 +38,14 @@
                                             <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->quantity }}" 
                                                    class="w-16 border rounded text-center font-bold focus:border-red-500 focus:outline-none">
                                             
-                                            <button type="submit" class="flex-1 bg-red-500 text-white text-sm font-bold py-1 px-2 rounded hover:bg-red-600 transition">
-                                                Start cooking
-                                            </button>
+                                            <x-btn-outline color="red" class="flex-1">Start cooking</x-btn-outline>
                                         </div>
                                         
                                     @elseif ($item->status === 'cooking')
                                         <div class="flex gap-2">
                                             <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->quantity }}" 
                                                    class="w-16 border rounded text-center font-bold focus:border-yellow-500 focus:outline-none">
-                                            
-                                            <button type="submit" class="flex-1 bg-yellow-500 text-white text-sm font-bold py-1 px-2 rounded hover:bg-yellow-600 transition">
-                                                Mark as Ready
-                                            </button>
+                                            <x-btn-outline color="green" class="flex-1">Mark as Ready</x-btn-outline>
                                         </div>
                                     @endif
                                 </form>
@@ -52,11 +54,10 @@
                     </div>
                 </div>
             @empty
-                <div class="col-span-full text-center py-8 text-gray-500">
+                <div class="col-span-full text-center py-8 text-gray-500 font-semibold">
                     No orders. Kitchen is idle.
                 </div>
             @endforelse
         </div>
     </div>
-</body>
-</html>
+@endsection

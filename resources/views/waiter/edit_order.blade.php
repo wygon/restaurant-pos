@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Manage Table: {{ $table->number }}</title>
-</head>
-<body class="bg-gray-100 p-8">
-    @include('partials.topbar')
-
+@extends('layouts.app')
+@section('content')
     <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
         
         <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-red-500 flex flex-col">
@@ -108,5 +100,4 @@
         </div>
 
     </div>
-</body>
-</html>
+@endsection
